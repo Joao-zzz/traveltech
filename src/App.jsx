@@ -1,10 +1,34 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "./supabase";
 
 function App(){
+  
+  const[ viagens, setViagens ] = useState ( [] )
+
+  useEffect( () => {
+    async function buscar () {
+      const { data, error } = await supabase.from("viagens").select("*");
+
+      if( error ){
+        alert("Erro ao Buscar Viagens no banco de dados ");
+      } else {
+        setViagens( data );
+      }
+    }
+
+    buscar();
+  } , [] );
+
   return(
     <>
-    <h1> Teste, Teste... Apenas negocios</h1>
-    <p> Não sei -_- ... O que mais esperar :/ ?</p>
+    <h1> Travel Worlds </h1>
+    <p> Viagens Disponiveis </p>
+
+    {
+      viagens.map( ( viagem ) => (
+        <p key={ viagem.id }> nome da Viagem { viagem.destino } - R$ { viagem.preco } </p>
+      ) )
+    }
     </>
   );
 }
